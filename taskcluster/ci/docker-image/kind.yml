@@ -7,4 +7,6 @@ transforms:
     - taskgraph.transforms.task:transforms
 
 tasks:
-    linux: {}
+    base: {}
+    toolchain-build:
+        parent: base

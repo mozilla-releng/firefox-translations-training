@@ -1,0 +1,54 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+---
+loader: taskgraph.loader.transform:loader
+
+transforms:
+    - taskgraph.transforms.fetch:transforms
+    - taskgraph.transforms.job:transforms
+    - taskgraph.transforms.task:transforms
+
+task-defaults:
+  docker-image: {in-tree: base}
+
+tasks:
+  marian:
+    description: Marian
+    fetch:
+      type: git
+      repo: https://github.com/marian-nmt/marian-dev
+      revision: e8a1a2530fb84cbff7383302ebca393e5875c441
+      path-prefix: marian-source
+
+  fast-align:
+    description: fast_align
+    fetch:
+      type: git
+      repo: https://github.com/clab/fast_align
+      revision: cab1e9aac8d3bb02ff5ae58218d8d225a039fa11
+
+  preprocess:
+    description: preprocess
+    fetch:
+      type: git
+      repo: https://github.com/kpu/preprocess
+      revision: 64307314b4d5a9a0bd529b5c1036b0710d995eec
+
+  extract-lex:
+    description: extract-lex
+    fetch:
+      type: git
+      repo: https://github.com/marian-nmt/extract-lex
+      revision: 42fa605b53f32eaf6c6e0b5677255c21c91b3d49
+
+  pigz:
+    description: Pigz 2.7
+    fetch:
+      type: static-url
+      url: https://zlib.net/pigz/pigz-2.7.tar.gz
+      sha256: b4c9e60344a08d5db37ca7ad00a5b2c76ccb9556354b722d56d55ca7e8b1c707
+      size: 108102
+      artifact-name: pigz-source.tar.zst
+      strip-components: 1
+      add-prefix: pigz-source/

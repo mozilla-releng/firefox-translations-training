@@ -23,13 +23,17 @@ type=$4
 threads=$5
 pack_dir=$6
 
+if [ "$threads" = "auto" ]; then
+  threads=$(nproc)
+fi
+
 output_dir=$(dirname "${output_prefix}")
 mkdir -p "${output_dir}"
 
 if [ "${bicleaner_threshold}" == "0" ]; then
   echo "Threshold is 0, skipping filtering"
-  cp "${corpus_prefix}.${SRC}.gz" "${output_prefix}.${SRC}.gz"
-  cp "${corpus_prefix}.${TRG}.gz" "${output_prefix}.${TRG}.gz"
+  cp "${corpus_prefix}.${SRC}.zst" "${output_prefix}.${SRC}.zst"
+  cp "${corpus_prefix}.${TRG}.zst" "${output_prefix}.${TRG}.zst"
 else
   if [ "${type}" == 'bicleaner-ai' ]; then
     echo "### Using bicleaner-ai"
@@ -69,27 +73,27 @@ else
        }
        export -f biclean
        # {%} is a 1-indexed job slot number from GNU parallel.  We use that as the 1-indexed offset in CUDA_VISIBLE_ARRAY
-       paste <(pigz -dc "${corpus_prefix}.${SRC}.gz") <(pigz -dc "${corpus_prefix}.${TRG}.gz") |
+       paste <(zstdmt -dc "${corpus_prefix}.${SRC}.zst") <(zstdmt -dc "${corpus_prefix}.${TRG}.zst") |
        parallel -j ${#CUDA_VISIBLE_ARRAY[@]} --pipe -k --block 10M biclean "${pack_dir}"/*.yaml {%} |
-       pigz >"${output_prefix}.scored.gz"
+       zstdmt >"${output_prefix}.scored.zst"
   else
-   paste <(pigz -dc "${corpus_prefix}.${SRC}.gz") <(pigz -dc "${corpus_prefix}.${TRG}.gz") |
+   paste <(zstdmt -dc "${corpus_prefix}.${SRC}.zst") <(zstdmt -dc "${corpus_prefix}.${TRG}.zst") |
      ${cmd} --scol ${scol} --tcol ${tcol} --processes "${threads}"  - - "${pack_dir}"/*.yaml |
-     pigz >"${output_prefix}.scored.gz"
+     zstdmt >"${output_prefix}.scored.zst"
   fi
 
   echo "### Filtering"
-  pigz -dc "${output_prefix}.scored.gz" |
+  zstdmt -dc "${output_prefix}.scored.zst" |
     awk -v threshold=${bicleaner_threshold} -F"\t" '{if ($3>threshold) {print $0}}' |
-    pigz >"${output_prefix}.best.gz"
+    zstdmt >"${output_prefix}.best.zst"
 
-  echo "Lines before filtering: $(pigz -dc "${output_prefix}.scored.gz" | wc -l)"
-  echo "Lines after filtering: $(pigz -dc "${output_prefix}.best.gz" | wc -l)"
+  echo "Lines before filtering: $(zstdmt -dc "${output_prefix}.scored.zst" | wc -l)"
+  echo "Lines after filtering: $(zstdmt -dc "${output_prefix}.best.zst" | wc -l)"
 
   echo "### Writing output corpus"
-  pigz -dc "${output_prefix}.best.gz" |
-    tee >(cut -f1 | pigz >"${output_prefix}.${SRC}.gz") |
-    cut -f2 | pigz >"${output_prefix}.${TRG}.gz"
+  zstdmt -dc "${output_prefix}.best.zst" |
+    tee >(cut -f1 | zstdmt >"${output_prefix}.${SRC}.zst") |
+    cut -f2 | zstdmt >"${output_prefix}.${TRG}.zst"
 
   # do not delete intermediate files to inspect them and tune the threshold
 fi

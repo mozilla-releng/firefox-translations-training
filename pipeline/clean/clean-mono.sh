@@ -25,10 +25,10 @@ mkdir -p "${dir}"
 ######################################################################
 echo "### Basic preprocessing"
 test -s "${output_prefix}.${lang}.nrm.gz" ||
-  pigz -dc "${input_prefix}.${lang}.gz" |
+  zstdmt -dc "${input_prefix}.${lang}.zst" |
   parallel --no-notice --pipe -k -j "${threads}" --block 50M \
     "perl tools/deescape-special-chars.perl | perl tools/remove-non-printing-char.perl" |
-  pigz >"${output_prefix}.${lang}.nrm.gz"
+  zstdmt -c >"${output_prefix}.${lang}.nrm.zst"
 
 #####################################################################
 echo "### Apply monolingual fixes"

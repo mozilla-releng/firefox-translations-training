@@ -14,7 +14,7 @@ trg=$2
 output_prefix=$3
 dataset=$4
 
-tmp="$(dirname "${output_prefix}")/flores/${dataset}"
+tmp="$(mktemp -d)/flores/${dataset}"
 mkdir -p "${tmp}"
 
 wget -O "${tmp}/flores101_dataset.tar.gz" "https://dl.fbaipublicfiles.com/flores101/dataset/flores101_dataset.tar.gz"
@@ -28,7 +28,7 @@ flores_code() {
   elif [ "${code}" == "zh-Hant" ]; then
     flores_code="zho_trad"
   else
-    flores_code=$(python -c "from mtdata.iso import iso3_code; print(iso3_code('${code}', fail_error=True))")
+    flores_code=$(python3 -c "from mtdata.iso import iso3_code; print(iso3_code('${code}', fail_error=True))")
   fi
 
   echo "${flores_code}"
@@ -37,8 +37,8 @@ flores_code() {
 src_flores=$(flores_code "${src}")
 trg_flores=$(flores_code "${trg}")
 
-pigz -c "${tmp}/flores101_dataset/${dataset}/${src_flores}.${dataset}" > "${output_prefix}.${src}.gz"
-pigz -c "${tmp}/flores101_dataset/${dataset}/${trg_flores}.${dataset}" > "${output_prefix}.${trg}.gz"
+zstd -c "${tmp}/flores101_dataset/${dataset}/${src_flores}.${dataset}" > "${output_prefix}.${src}.zst"
+zstd -c "${tmp}/flores101_dataset/${dataset}/${trg_flores}.${dataset}" > "${output_prefix}.${trg}.zst"
 
 rm -rf "${tmp}"
 

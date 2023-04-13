@@ -16,13 +16,15 @@ dataset=$4
 tmp="$(dirname "${output_prefix}")/mtdata/${dataset}"
 mkdir -p "${tmp}"
 
-src_iso=$(python -c "from mtdata.iso import iso3_code; print(iso3_code('${src}', fail_error=True))")
-trg_iso=$(python -c "from mtdata.iso import iso3_code; print(iso3_code('${trg}', fail_error=True))")
+src_iso=$(python3 -c "from mtdata.iso import iso3_code; print(iso3_code('${src}', fail_error=True))")
+trg_iso=$(python3 -c "from mtdata.iso import iso3_code; print(iso3_code('${trg}', fail_error=True))")
 
-mtdata get -l "${src}-${trg}" -tr "${dataset}" -o "${tmp}" --compress
+mtdata get -l "${src}-${trg}" -tr "${dataset}" -o "${tmp}"
 
-mv "${tmp}/train-parts/${dataset}.${src_iso}.gz" "${output_prefix}.${src}.gz"
-mv "${tmp}/train-parts/${dataset}.${trg_iso}.gz" "${output_prefix}.${trg}.gz"
+find "${tmp}"
+
+cat "${tmp}/train-parts/${dataset}.${src_iso}" | zstd -c > "${output_prefix}.${src}.zst"
+cat "${tmp}/train-parts/${dataset}.${trg_iso}" | zstd -c > "${output_prefix}.${trg}.zst"
 
 rm -rf "${tmp}"
 

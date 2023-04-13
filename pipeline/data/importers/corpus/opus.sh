@@ -26,8 +26,8 @@ wget -O "${archive_path}" "https://object.pouta.csc.fi/OPUS-${dataset}/moses/${s
 unzip -o "${archive_path}" -d "${tmp}"
 
 for lang in ${src} ${trg}; do
-  pigz -c "${tmp}/${name}.${src}-${trg}.${lang}" > "${output_prefix}.${lang}.gz" ||
-    pigz -c "${tmp}/${name}.${trg}-${src}.${lang}" > "${output_prefix}.${lang}.gz"
+  zstd -c "${tmp}/${name}.${src}-${trg}.${lang}" > "${output_prefix}.${lang}.zst" ||
+    zstd -c "${tmp}/${name}.${trg}-${src}.${lang}" > "${output_prefix}.${lang}.zst"
 done
 
 rm -rf "${tmp}"

@@ -78,6 +78,12 @@ workers:
             implementation: docker-worker
             os: linux
             worker-type: '{alias}-gcp'
+        # TODO: this should probably be b-linux...need to update ci-config
+        t-linux-v100-gpu:
+            provisioner: '{trust-domain}-{level}'
+            implementation: generic-worker
+            os: linux
+            worker-type: '{alias}'
         images:
             provisioner: '{trust-domain}-{level}'
             implementation: docker-worker

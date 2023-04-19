@@ -44,6 +44,15 @@ def shorten_dataset_name(dataset):
         .replace("Neulab-tedtalks_train-1", "Ntt1")
     )
 
+# TODO: this should _not_ live in this file; this is just a quick hack
+# for testing
+def parameter_defaults(params):
+    p = {}
+    p.setdefault("bicleaner_threshold", "1.0")
+    for k,v in params.items():
+        p[k] = v
+    return p
+
 @transforms.add
 def render_command(config, jobs):
     for job in jobs:
@@ -60,6 +69,7 @@ def render_command(config, jobs):
                     "dataset_no_slashes": dataset.replace("/", "."),
                     "src_locale": pair["src"],
                     "trg_locale": pair["trg"],
+                    **parameter_defaults(config.params),
                 }
                 for field in substitution_fields:
                     container, subfield = subjob, field

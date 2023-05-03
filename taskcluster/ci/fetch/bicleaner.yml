@@ -2,15 +2,6 @@
 # License, v. 2.0. If a copy of the MPL was not distributed with this
 # file, You can obtain one at http://mozilla.org/MPL/2.0/.
 ---
-bicleaner-ai-full-en-xx:
-    description: bicleaner-ai full en-xx pack
-    fetch:
-        type: static-url
-        url: https://github.com/bitextor/bicleaner-ai-data/releases/download/v2.0/full-en-xx.tgz
-        sha256: 6429bf2802224e7ae52493a4aef4c0c78fb2b86837f3ebf8a3613432e6227880
-        size: 952926795
-        artifact-name: bicleaner-full-en-xx.tar.zst
-
 bicleaner-en-bg:
     description: bicleaner en-bg pack
     fetch:

@@ -31,40 +31,36 @@ datasets:
     flores:
         dev:
             - src: en
-              trg: ru
-            - src: en
               trg: fr
         devtest:
-            - src: en
-              trg: ru
             - src: en
               trg: fr
 
     sacrebleu:
         wmt19:
             - src: en
-              trg: ru
+              trg: fr
         wmt20:
             - src: en
-              trg: ru
+              trg: fr
 
     opus:
         ada83/v1:
             - src: en
-              trg: ru
+              trg: fr
         GNOME/v1:
             - src: en
-              trg: ru
+              trg: fr
 
     news-crawl:
         news.2020:
             - src: en
-              trg: ru
+              trg: fr
 
     mtdata:
         Neulab-tedtalks_train-1-eng-rus:
             - src: en
-              trg: ru
+              trg: fr
 
 workers:
     aliases:

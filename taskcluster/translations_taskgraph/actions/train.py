@@ -13,7 +13,17 @@ TRAIN_ON_PROJECTS = (
 
 
 def can_train(parameters):
-    return parameters["head_repository"] in TRAIN_ON_PROJECTS
+    # Tasks generated from official repositories should be able to run training.
+    if parameters["head_repository"] in TRAIN_ON_PROJECTS:
+        return True
+    # PRs _to_ official repositories (even if the PR branch is on a fork) should
+    # also be able to run training. This is important to allow pipeline steps
+    # to be developed and tested before landing (these do not run automatically
+    # on push or PR).
+    if parameters["base_repository"] in TRAIN_ON_PROJECTS and parameters["tasks_for"] == "github-pull-request":
+        return True
+
+    return False
 
 
 @register_callback_action(

@@ -22,8 +22,13 @@ tmp="${output_prefix}/merge"
 mkdir -p "${tmp}"
 
 echo "### Merging"
-cat "${input_prefixes[@]/%/.${SRC}.${ARTIFACT_EXT}}" >"${tmp}/corpus.${SRC}.dup.${ARTIFACT_EXT}"
-cat "${input_prefixes[@]/%/.${TRG}.${ARTIFACT_EXT}}" >"${tmp}/corpus.${TRG}.dup.${ARTIFACT_EXT}"
+if [[ "${input_prefixes[0]}" == *.${ARTIFACT_EXT} ]]; then
+  cat "${input_prefixes[@]}" >"${tmp}/corpus.${SRC}.dup.${ARTIFACT_EXT}"
+  cat "${input_prefixes[@]}" >"${tmp}/corpus.${TRG}.dup.${ARTIFACT_EXT}"
+else
+  cat "${input_prefixes[@]/%/.${SRC}.${ARTIFACT_EXT}}" >"${tmp}/corpus.${SRC}.dup.${ARTIFACT_EXT}"
+  cat "${input_prefixes[@]/%/.${TRG}.${ARTIFACT_EXT}}" >"${tmp}/corpus.${TRG}.dup.${ARTIFACT_EXT}"
+fi
 
 echo "### Deduplication"
 paste <(${COMPRESSION_CMD} -dc "${tmp}/corpus.${SRC}.dup.${ARTIFACT_EXT}") <(${COMPRESSION_CMD} -dc "${tmp}/corpus.${TRG}.dup.${ARTIFACT_EXT}") |

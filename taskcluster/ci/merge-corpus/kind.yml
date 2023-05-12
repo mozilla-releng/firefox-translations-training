@@ -7,6 +7,7 @@ loader: taskgraph.loader.transform:loader
 
 transforms:
     - translations_taskgraph.transforms.from_datasets:locales_only
+    - translations_taskgraph.transforms.find_upstreams:by_locales
     - taskgraph.transforms.job:transforms
     - translations_taskgraph.transforms.cache:transforms
     - taskgraph.transforms.cached_tasks:transforms
@@ -39,6 +40,20 @@ tasks:
                 - name
                 - treeherder.symbol
                 - worker.env
+                - upstreams-config.locale-pair
+                - upstreams-config.locale-pair
+        upstreams-config:
+            locale-pair:
+                src: "{src_locale}"
+                trg: "{trg_locale}"
+            upstream-task:
+                by-cleaning-type:
+                    bicleaner-ai: bicleaner-ai
+                    bicleaner: bicleaner
+                    clean: clean
+            upstream-artifacts:
+                - "{dataset_no_slashes}.{src_locale}.zst"
+                - "{dataset_no_slashes}.{trg_locale}.zst"
         worker-type: b-linux
         worker:
             docker-image: {"in-tree": "train"}
@@ -72,6 +87,7 @@ tasks:
                     $VCS_PATH/pipeline/clean/merge-corpus.sh
                     artifacts
                     $MOZ_FETCHES_DIR/*.zst
+
         fetches:
             toolchain:
                 - preprocess

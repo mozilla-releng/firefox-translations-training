@@ -155,6 +155,12 @@ def jobs_from_datasets(config, jobs):
                     if subjob.get("run", {}).get("command-context") is not None:
                         subjob["run"]["command-context"].update(subs)
 
+                    subjob.setdefault("attributes", {})
+                    subjob["attributes"]["provider"] = provider
+                    subjob["attributes"]["dataset"] = dataset
+                    subjob["attributes"]["src_locale"] = pair["src"]
+                    subjob["attributes"]["trg_locale"] = pair["trg"]
+
                     yield subjob
 
 
@@ -211,5 +217,8 @@ def jobs_from_locales(config, jobs):
             # substitution in a command.
             if subjob.get("run", {}).get("command-context") is not None:
                 subjob["run"]["command-context"].update(subs)
+
+            subjob["attributes"]["src_locale"] = pair["src"]
+            subjob["attributes"]["trg_locale"] = pair["trg"]
 
             yield subjob

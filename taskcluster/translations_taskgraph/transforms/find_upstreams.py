@@ -67,6 +67,8 @@ def upstreams_for_locales(config, jobs):
         # Now that we've resolved which type of upstream task we want, we need to
         # find all instances of that task for our locale pair, add them to our
         # dependencies, and the necessary artifacts to our fetches.
+        # TODO: this shouldn't pull in _all_ tasks, just ones that were specified in
+        # the params
         for task in config.kind_dependencies_tasks.values():
             if not task.label.startswith(upstream_task):
                 continue

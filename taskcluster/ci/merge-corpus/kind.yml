@@ -82,7 +82,8 @@ tasks:
                 - -c
                 # Arguments are:
                 # 1) output directory
-                # 2) input files
+                # 2) input prefixes (dataset names without slashes) -- the script will append
+                #    the locales and file extensions for each one given.
                 - >-
                     export BIN=$MOZ_FETCHES_DIR &&
                     $VCS_PATH/pipeline/clean/merge-corpus.sh

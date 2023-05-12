@@ -37,7 +37,7 @@ def can_train(parameters):
 (any stages this choice depends on will be automatically included).""",
                 "default": "",
                 # TODO: this should probably be specified in ci/config.yml
-                "enum": ["clean", "bicleaner", "bicleaner-ai"],
+                "enum": ["clean", "bicleaner", "bicleaner-ai", "merge-corpus"],
             },
             "datasets": {
                 "type": "array",
@@ -46,7 +46,7 @@ def can_train(parameters):
                 "items": {
                     "type": "string",
                     # TODO: pull this from ci/config.yml
-                    "enum": ["flores-dev"],
+                    "enum": ["flores-dev", "sacrebleu-wmt19", "opus-ada83/v1", "news-crawl-news.2020", "mtdata-Neulab-tedtalks_train-1-eng-rus"],
                 },
             },
             # TODO: should these be replaced with a single pair?
@@ -100,7 +100,10 @@ def train_action(parameters, graph_config, input, task_group_id, task_id):
     parameters["tasks_for"] = "action"
 
     # make parameters read-only
-    parameters["target_task_names"] = [f"{stage}-{d}-{locale_str}" for d in target_datasets]
+    if stage == "merge-corpus":
+        parameters["target_task_names"] = [f"{stage}-{locale_str}"]
+    else:
+        parameters["target_task_names"] = [f"{stage}-{d}-{locale_str}" for d in target_datasets]
     parameters["bicleaner_threshold"] = input["bicleaner_threshold"]
     parameters = Parameters(**parameters)
 

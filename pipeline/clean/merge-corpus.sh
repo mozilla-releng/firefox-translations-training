@@ -15,20 +15,23 @@ test -v BIN
 output_prefix=$1
 input_prefixes=( "${@:2}" )
 
+COMPRESSION_CMD="${COMPRESSION_CMD:-pigz}"
+ARTIFACT_EXT="${ARTIFACT_EXT:-gz}"
+
 tmp="${output_prefix}/merge"
 mkdir -p "${tmp}"
 
 echo "### Merging"
-cat "${input_prefixes[@]/%/.${SRC}.gz}" >"${tmp}/corpus.${SRC}.dup.gz"
-cat "${input_prefixes[@]/%/.${TRG}.gz}" >"${tmp}/corpus.${TRG}.dup.gz"
+cat "${input_prefixes[@]/%/.${SRC}.${ARTIFACT_EXT}}" >"${tmp}/corpus.${SRC}.dup.${ARTIFACT_EXT}"
+cat "${input_prefixes[@]/%/.${TRG}.${ARTIFACT_EXT}}" >"${tmp}/corpus.${TRG}.dup.${ARTIFACT_EXT}"
 
 echo "### Deduplication"
-paste <(pigz -dc "${tmp}/corpus.${SRC}.dup.gz") <(pigz -dc "${tmp}/corpus.${TRG}.dup.gz") |
+paste <(${COMPRESSION_CMD} -dc "${tmp}/corpus.${SRC}.dup.${ARTIFACT_EXT}") <(${COMPRESSION_CMD} -dc "${tmp}/corpus.${TRG}.dup.${ARTIFACT_EXT}") |
 ${BIN}/dedupe |
-pigz >"${tmp}.${SRC}${TRG}.gz"
+${COMPRESSION_CMD} >"${tmp}.${SRC}${TRG}.${ARTIFACT_EXT}"
 
-pigz -dc "${tmp}.${SRC}${TRG}.gz" | cut -f1 | pigz > "${output_prefix}.${SRC}.gz"
-pigz -dc "${tmp}.${SRC}${TRG}.gz" | cut -f2 | pigz > "${output_prefix}.${TRG}.gz"
+${COMPRESSION_CMD} -dc "${tmp}.${SRC}${TRG}.${ARTIFACT_EXT}" | cut -f1 | ${COMPRESSION_CMD} > "${output_prefix}.${SRC}.${ARTIFACT_EXT}"
+${COMPRESSION_CMD} -dc "${tmp}.${SRC}${TRG}.${ARTIFACT_EXT}" | cut -f2 | ${COMPRESSION_CMD} > "${output_prefix}.${TRG}.${ARTIFACT_EXT}"
 
 rm -rf "${tmp}"
 

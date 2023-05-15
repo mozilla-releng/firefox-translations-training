@@ -9,4 +9,5 @@ cd $build_dir
 cmake $PREPROCESS_DIR -DBUILD_TYPE=Release
 make -j$(nproc)
 
-cp $build_dir/bin/dedupe $UPLOAD_DIR
+chmod +x $build_dir/bin/dedupe
+tar --zstd -cf $UPLOAD_DIR/dedupe.tar.zst $build_dir/bin/dedupe

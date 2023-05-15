@@ -9,4 +9,5 @@ cd $build_dir
 cmake $EXTRACT_LEX_DIR
 make -j$(nproc)
 
-cp $build_dir/extract_lex $UPLOAD_DIR
+chmod +x $build_dir/extract_lex
+tar --zstd -cf $UPLOAD_DIR/extract_lex.tar.zst $build_dir/extract_lex

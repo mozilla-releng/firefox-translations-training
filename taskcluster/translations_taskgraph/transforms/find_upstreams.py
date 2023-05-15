@@ -43,6 +43,7 @@ def get_cleaning_type(src, trg, upstreams):
 
 @by_locales.add
 def upstreams_for_locales(config, jobs):
+    target_datasets = config.params.get("target_datasets", [])
     for job in jobs:
         upstreams_config = job.pop("upstreams-config")
         src = upstreams_config["locale-pair"]["src"]
@@ -74,6 +75,11 @@ def upstreams_for_locales(config, jobs):
                 continue
             # TODO: get rid of this hack
             if upstream_task == "bicleaner" and task.label.startswith("bicleaner-ai"):
+                continue
+
+            # TODO: and this one
+            ds = f"{task.attributes['provider']}-{task.attributes['dataset']}"
+            if target_datasets and ds not in target_datasets:
                 continue
 
             subs = {

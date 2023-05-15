@@ -105,6 +105,7 @@ def train_action(parameters, graph_config, input, task_group_id, task_id):
     else:
         parameters["target_task_names"] = [f"{stage}-{d}-{locale_str}" for d in target_datasets]
     parameters["bicleaner_threshold"] = input["bicleaner_threshold"]
+    parameters["target_datasets"] = target_datasets
     parameters = Parameters(**parameters)
 
     taskgraph_decision({"root": graph_config.root_dir}, parameters=parameters)

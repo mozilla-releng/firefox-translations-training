@@ -4,6 +4,10 @@ from taskgraph.target_tasks import _target_task
 @_target_task("train-target-tasks")
 def train_target_tasks(full_task_graph, parameters, graph_config):
     def filter(label):
+        for dataset in parameters["target_datasets"]:
+            if dataset in label:
+                return False
+
         if label in parameters["target_task_names"]:
             return True
 

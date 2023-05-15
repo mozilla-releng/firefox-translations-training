@@ -126,7 +126,7 @@ tasks:
         worker:
             artifacts:
                 - name: public/build
-                  path: /builds/worker/artifacts
+                  path: artifacts
                   type: directory
         treeherder:
             platform: bicleaner-ai/opt

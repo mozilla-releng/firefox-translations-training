@@ -82,6 +82,9 @@ def upstreams_for_locales(config, jobs):
             if target_datasets and ds not in target_datasets:
                 continue
 
+            if task.attributes["src_locale"] != src or task.attributes["trg_locale"] != trg:
+                continue
+
             subs = {
                 "src_locale": src,
                 "trg_locale": trg,

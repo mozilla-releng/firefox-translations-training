@@ -54,7 +54,7 @@ tasks:
             upstream-artifacts:
                 - "{dataset_no_slashes}.{src_locale}.zst"
                 - "{dataset_no_slashes}.{trg_locale}.zst"
-        worker-type: b-linux
+        worker-type: b-linux-large
         worker:
             docker-image: {"in-tree": "train"}
             max-run-time: 3600

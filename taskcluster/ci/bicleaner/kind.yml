@@ -78,7 +78,6 @@ task-defaults:
                 {bicleaner_type}
                 {bicleaner_threads}
                 $MOZ_FETCHES_DIR/{src_locale}-{trg_locale}
-                && find /
     dependencies:
         "{provider}": clean-{provider}-{dataset_no_slashes}-{src_locale}-{trg_locale}
     fetches:

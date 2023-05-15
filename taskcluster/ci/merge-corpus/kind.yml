@@ -86,7 +86,6 @@ tasks:
                 #    the locales and file extensions for each one given.
                 - >-
                     export BIN=$MOZ_FETCHES_DIR &&
-                    chmod +x $MOZ_FETCHES_DIR/dedupe &&
                     $VCS_PATH/pipeline/clean/merge-corpus.sh
                     artifacts
                     $MOZ_FETCHES_DIR/*.zst

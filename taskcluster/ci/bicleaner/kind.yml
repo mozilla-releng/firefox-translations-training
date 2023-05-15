@@ -98,7 +98,7 @@ task-defaults:
 tasks:
     "{provider}-{dataset}-{src_locale}-{trg_locale}":
         description: bicleaner for {provider} {dataset} dataset {src_locale}-{trg_locale}
-        worker-type: b-linux
+        worker-type: b-linux-large
         worker:
             docker-image: {"in-tree": "train"}
         treeherder:

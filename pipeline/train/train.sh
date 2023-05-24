@@ -34,10 +34,16 @@ echo "### Training ${model_dir}"
 
 # if doesn't fit in RAM, remove --shuffle-in-ram and add --shuffle batches
 
+zstd -dc "${train_set_prefix}.${src}.${ARTIFACT_EXT}" | pigz -c > src.gz
+zstd -dc "${train_set_prefix}.${trg}.${ARTIFACT_EXT}" | pigz -c > trg.gz
+zstd -dc "${valid_set_prefix}.${src}.${ARTIFACT_EXT}" | pigz -c > src2.gz
+zstd -dc "${valid_set_prefix}.${trg}.${ARTIFACT_EXT}" | pigz -c > trg2.gz
+
 "${MARIAN}/marian" \
   --model "${model_dir}/model.npz" \
   -c "configs/model/${model_type}.yml" "configs/training/${model_type}.${training_type}.yml" \
-  --train-sets "${train_set_prefix}".{"${src}","${trg}"}.${ARTIFACT_EXT} \
+  --train-sets src.gz trg.gz
+  # --train-sets "${train_set_prefix}".{"${src}","${trg}"}.${ARTIFACT_EXT} \
   -T "${model_dir}/tmp" \
   --shuffle-in-ram \
   --vocabs "${vocab}" "${vocab}" \
@@ -46,7 +52,8 @@ echo "### Training ${model_dir}"
   --sharding local \
   --sync-sgd \
   --valid-metrics "${best_model_metric}" ${all_model_metrics[@]/$best_model_metric} \
-  --valid-sets "${valid_set_prefix}".{"${src}","${trg}"}.${ARTIFACT_EXT} \
+  --valid-sets src2.gz trg2.gz
+  # --valid-sets "${valid_set_prefix}".{"${src}","${trg}"}.${ARTIFACT_EXT} \
   --valid-translation-output "${model_dir}/devset.out" \
   --quiet-translation \
   --overwrite \

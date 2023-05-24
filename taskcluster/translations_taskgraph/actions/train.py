@@ -144,6 +144,10 @@ leave empty to skip augmentation step (high resource languages)
                             },
                         },
                     },
+                    "best-model": {
+                        "type": "string",
+                        "description": "best model to use for training",
+                    },
                     "spm-sample-size": {
                         "type": "number",
                         "description": "vocabularly training sample size",

@@ -24,6 +24,7 @@ def get_defaults(_):
                         "mtdata_Neulab-tedtalks_train-1-eng-rus": 0.6,
                     },
                 },
+                "best-model": "chrf",
                 "spm-sample-size": 100000,
             },
             "marian-args": {
@@ -77,6 +78,7 @@ extend_parameters_schema(
                         str: float,
                     },
                 },
+                Required("best-model"): str,
                 Required("spm-sample-size"): int,
             },
             Optional("bicleaner_threshold"): str,

@@ -38,7 +38,7 @@ defaults = get_defaults("")["training_config"]
 (any stages this choice depends on will be automatically included).""",
                 "default": defaults["target-stage"],
                 # TODO: this should probably be specified in ci/config.yml
-                "enum": ["clean", "bicleaner", "bicleaner-ai", "merge-corpus", "merge-devset", "train-vocab"],
+                "enum": ["clean", "bicleaner", "bicleaner-ai", "merge-corpus", "merge-devset", "train-vocab", "train-backwards"],
             },
             "datasets": {
                 "type": "object",
@@ -98,6 +98,18 @@ leave empty to skip augmentation step (high resource languages)
                     },
                 },
             },
+            "marian-args": {
+                "type": "object",
+                "default": defaults["marian-args"],
+                "properties": {
+                    "training-backward": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "string",
+                        },
+                    },
+                },
+            },
             "experiment": {
                 "type": "object",
                 "default": defaults["experiment"],
@@ -147,6 +159,7 @@ leave empty to skip augmentation step (high resource languages)
             "target-stage",
             "datasets",
             "experiment",
+            "marian-args",
         ],
     },
 )

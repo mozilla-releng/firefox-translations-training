@@ -19,6 +19,8 @@ vocab=$8
 best_model_metric=$9
 extra_params=( "${@:10}" )
 
+ARTIFACT_EXT="${ARTIFACT_EXT:-gz}"
+
 test -v GPUS
 test -v MARIAN
 test -v WORKSPACE
@@ -35,7 +37,7 @@ echo "### Training ${model_dir}"
 "${MARIAN}/marian" \
   --model "${model_dir}/model.npz" \
   -c "configs/model/${model_type}.yml" "configs/training/${model_type}.${training_type}.yml" \
-  --train-sets "${train_set_prefix}".{"${src}","${trg}"}.gz \
+  --train-sets "${train_set_prefix}".{"${src}","${trg}"}.${ARTIFACT_EXT} \
   -T "${model_dir}/tmp" \
   --shuffle-in-ram \
   --vocabs "${vocab}" "${vocab}" \
@@ -44,7 +46,7 @@ echo "### Training ${model_dir}"
   --sharding local \
   --sync-sgd \
   --valid-metrics "${best_model_metric}" ${all_model_metrics[@]/$best_model_metric} \
-  --valid-sets "${valid_set_prefix}".{"${src}","${trg}"}.gz \
+  --valid-sets "${valid_set_prefix}".{"${src}","${trg}"}.${ARTIFACT_EXT} \
   --valid-translation-output "${model_dir}/devset.out" \
   --quiet-translation \
   --overwrite \

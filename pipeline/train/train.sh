@@ -34,10 +34,10 @@ echo "### Training ${model_dir}"
 
 # if doesn't fit in RAM, remove --shuffle-in-ram and add --shuffle batches
 
-zstd -dc "${train_set_prefix}.${src}.${ARTIFACT_EXT}" | pigz -c > src.gz
-zstd -dc "${train_set_prefix}.${trg}.${ARTIFACT_EXT}" | pigz -c > trg.gz
-zstd -dc "${valid_set_prefix}.${src}.${ARTIFACT_EXT}" | pigz -c > src2.gz
-zstd -dc "${valid_set_prefix}.${trg}.${ARTIFACT_EXT}" | pigz -c > trg2.gz
+zstdmt -dc "${train_set_prefix}.${src}.${ARTIFACT_EXT}" | pigz -c > src.gz
+zstdmt -dc "${train_set_prefix}.${trg}.${ARTIFACT_EXT}" | pigz -c > trg.gz
+zstdmt -dc "${valid_set_prefix}.${src}.${ARTIFACT_EXT}" | pigz -c > src2.gz
+zstdmt -dc "${valid_set_prefix}.${trg}.${ARTIFACT_EXT}" | pigz -c > trg2.gz
 
 "${MARIAN}/marian" \
   --model "${model_dir}/model.npz" \

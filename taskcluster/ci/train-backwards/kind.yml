@@ -85,11 +85,11 @@ tasks:
                     {src_locale}
                     $MOZ_FETCHES_DIR/corpus
                     $MOZ_FETCHES_DIR/devset
-                    artifacts
+                    $HOME/artifacts
                     $MOZ_FETCHES_DIR/vocab.spm
                     {best_model}
                     {marian_args}
-                    && find /
+                    && export
 
         dependencies:
             merge-corpus: merge-corpus-{src_locale}-{trg_locale}

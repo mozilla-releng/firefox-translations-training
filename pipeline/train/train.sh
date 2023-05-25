@@ -34,16 +34,16 @@ echo "### Training ${model_dir}"
 
 # if doesn't fit in RAM, remove --shuffle-in-ram and add --shuffle batches
 
-zstdmt -dc "${train_set_prefix}.${src}.${ARTIFACT_EXT}" | $MOZ_FETCHES_DIR/pigz -c > src.gz
-zstdmt -dc "${train_set_prefix}.${trg}.${ARTIFACT_EXT}" | $MOZ_FETCHES_DIR/pigz -c > trg.gz
-zstdmt -dc "${valid_set_prefix}.${src}.${ARTIFACT_EXT}" | $MOZ_FETCHES_DIR/pigz -c > src2.gz
-zstdmt -dc "${valid_set_prefix}.${trg}.${ARTIFACT_EXT}" | $MOZ_FETCHES_DIR/pigz -c > trg2.gz
+# TODO: remove this hack
+zstdmt --rm -d "${train_set_prefix}.${src}.${ARTIFACT_EXT}"
+zstdmt --rm -d "${train_set_prefix}.${trg}.${ARTIFACT_EXT}"
+zstdmt --rm -d "${valid_set_prefix}.${src}.${ARTIFACT_EXT}"
+zstdmt --rm -d "${valid_set_prefix}.${trg}.${ARTIFACT_EXT}"
 
 "${MARIAN}/marian" \
   --model "${model_dir}/model.npz" \
   -c "configs/model/${model_type}.yml" "configs/training/${model_type}.${training_type}.yml" \
-  --train-sets src.gz trg.gz
-  # --train-sets "${train_set_prefix}".{"${src}","${trg}"}.${ARTIFACT_EXT} \
+  --train-sets "${train_set_prefix}".{"${src}","${trg}"} \
   -T "${model_dir}/tmp" \
   --shuffle-in-ram \
   --vocabs "${vocab}" "${vocab}" \
@@ -52,8 +52,7 @@ zstdmt -dc "${valid_set_prefix}.${trg}.${ARTIFACT_EXT}" | $MOZ_FETCHES_DIR/pigz 
   --sharding local \
   --sync-sgd \
   --valid-metrics "${best_model_metric}" ${all_model_metrics[@]/$best_model_metric} \
-  --valid-sets src2.gz trg2.gz
-  # --valid-sets "${valid_set_prefix}".{"${src}","${trg}"}.${ARTIFACT_EXT} \
+  --valid-sets "${valid_set_prefix}".{"${src}","${trg}"} \
   --valid-translation-output "${model_dir}/devset.out" \
   --quiet-translation \
   --overwrite \

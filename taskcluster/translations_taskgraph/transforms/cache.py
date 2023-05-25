@@ -50,7 +50,7 @@ def add_cache(config, jobs):
 
         job["cache"] = {
             "type": cache_type,
-            "name": job["label"],
+            "name": job["label"].replace("/", "_"),
             "digest-data": digest_data,
         }
 

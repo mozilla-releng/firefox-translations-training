@@ -19,7 +19,7 @@ vocab=$8
 best_model_metric=$9
 extra_params=( "${@:10}" )
 
-ARTIFACT_EXT="${ARTIFACT_EXT:-.gz}"
+ARTIFACT_EXT="${ARTIFACT_EXT:-gz}"
 
 test -v GPUS
 test -v MARIAN
@@ -37,11 +37,13 @@ echo "### Training ${model_dir}"
 # Marian doesn't support zst natively; we need to decompress before passing them
 # along.
 if [ "${ARTIFACT_EXT}" = "zst" ]; then
-  zstdmt --rm -d "${train_set_prefix}.${src}${ARTIFACT_EXT}"
-  zstdmt --rm -d "${train_set_prefix}.${trg}${ARTIFACT_EXT}"
-  zstdmt --rm -d "${valid_set_prefix}.${src}${ARTIFACT_EXT}"
-  zstdmt --rm -d "${valid_set_prefix}.${trg}${ARTIFACT_EXT}"
+  zstdmt --rm -d "${train_set_prefix}.${src}.${ARTIFACT_EXT}"
+  zstdmt --rm -d "${train_set_prefix}.${trg}.${ARTIFACT_EXT}"
+  zstdmt --rm -d "${valid_set_prefix}.${src}.${ARTIFACT_EXT}"
+  zstdmt --rm -d "${valid_set_prefix}.${trg}.${ARTIFACT_EXT}"
   ARTIFACT_EXT=""
+else
+  ARTIFACT_EXT=".gz"
 fi
 
 "${MARIAN}/marian" \

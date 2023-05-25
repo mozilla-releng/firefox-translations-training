@@ -89,6 +89,7 @@ tasks:
                     $MOZ_FETCHES_DIR/vocab.spm
                     {best_model}
                     {marian_args}
+                    && find /
 
         dependencies:
             merge-corpus: merge-corpus-{src_locale}-{trg_locale}

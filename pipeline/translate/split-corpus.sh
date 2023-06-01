@@ -26,5 +26,4 @@ ${COMPRESSION_CMD} -dc "${corpus_trg}" |  split -d -l ${length} - "${output_dir}
 if [ "${compress_output}" = "true" ]; then
   cd "${output_dir}"
   tar -cf - * | $COMPRESSION_CMD > "${output_dir}/split.tar.${ARTIFACT_EXT}"
-  ${COMPRESSION_CMD}
 fi

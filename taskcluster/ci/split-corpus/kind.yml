@@ -64,7 +64,7 @@ tasks:
                     $VCS_PATH/pipeline/translate/split-corpus.sh
                     fetches/corpus.{src_locale}.zst
                     fetches/corpus.{trg_locale}.zst
-                    artifacts
+                    /builds/worker/artifacts
                     {split_length}
                     true
 

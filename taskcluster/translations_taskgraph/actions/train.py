@@ -38,7 +38,7 @@ defaults = get_defaults("")["training_config"]
 (any stages this choice depends on will be automatically included).""",
                 "default": defaults["target-stage"],
                 # TODO: this should probably be specified in ci/config.yml
-                "enum": ["clean", "bicleaner", "bicleaner-ai", "merge-corpus", "merge-devset", "train-vocab", "train-backwards", "evaluate-backwards"],
+                "enum": ["clean", "bicleaner", "bicleaner-ai", "merge-corpus", "merge-devset", "train-vocab", "train-backwards", "evaluate-backwards", "split-corpus"],
             },
             "datasets": {
                 "type": "object",
@@ -147,6 +147,10 @@ leave empty to skip augmentation step (high resource languages)
                     "best-model": {
                         "type": "string",
                         "description": "best model to use for training",
+                    },
+                    "split-length": {
+                        "type": "number",
+                        "description": "split length for merged corpus",
                     },
                     "spm-sample-size": {
                         "type": "number",

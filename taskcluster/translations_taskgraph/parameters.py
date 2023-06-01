@@ -25,6 +25,7 @@ def get_defaults(_):
                     },
                 },
                 "best-model": "chrf",
+                "split-length": 100000,
                 "spm-sample-size": 100000,
             },
             "marian-args": {
@@ -79,6 +80,7 @@ extend_parameters_schema(
                     },
                 },
                 Required("best-model"): str,
+                Required("split-length"): int,
                 Required("spm-sample-size"): int,
             },
             Optional("bicleaner_threshold"): str,

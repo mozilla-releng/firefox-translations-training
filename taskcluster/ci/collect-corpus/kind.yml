@@ -33,6 +33,7 @@ tasks:
                 - treeherder.symbol
                 - fetches
                 - dependencies
+                - run.command
         worker-type: b-linux-large
         worker:
             docker-image: {"in-tree": "train"}
@@ -58,7 +59,7 @@ tasks:
                 - >-
                     $VCS_PATH/pipeline/translate/collect.sh
                     $MOZ_FETCHES_DIR
-                    artifacts
+                    /home/worker/artifacts/corpus.{trg_locale}.zst
                     fetches/corpus.{src_locale}.zst
 
         dependencies:

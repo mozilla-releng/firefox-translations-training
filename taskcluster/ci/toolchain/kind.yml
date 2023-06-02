@@ -61,7 +61,8 @@ tasks:
         worker-type: b-linux-large
         run:
             script: build-marian.sh
-            arguments: taskcluster/scripts/toolchain/browsermt.patch
+            arguments:
+                - taskcluster/scripts/toolchain/browsermt.patch
             resources:
                 - taskcluster/scripts/toolchain/build-marian.sh
                 - taskcluster/scripts/toolchain/browsermt.patch

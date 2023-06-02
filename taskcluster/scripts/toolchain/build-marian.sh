@@ -8,7 +8,8 @@ export MARIAN_DIR=$MOZ_FETCHES_DIR/marian-source
 export CUDA_DIR=$MOZ_FETCHES_DIR/cuda-toolkit
 
 if [ "$patch" != "none" ]; then
-  patch -d ${MARIAN_DIR} -p1 < $(realpath ${patch})
+  absolute_path=$(realpath ${patch})
+  patch -d ${MARIAN_DIR} -p1 < ${absolute_path}
 fi
 
 # TODO: consider not calling out to this since it's such a simple script...

@@ -25,11 +25,6 @@ diff -Naur browsermt-marian-dev.bak/CMakeLists.txt browsermt-marian-dev/CMakeLis
      option(COMPILE_CUDA_SM50 "Compile GPU version with SM50 support" ON)
      option(COMPILE_CUDA_SM60 "Compile GPU version with SM60 support" ON)
      option(COMPILE_CUDA_SM70 "Compile GPU version with SM70 support" ON)
-diff -Naur browsermt-marian-dev.bak/.git/refs/stash browsermt-marian-dev/.git/refs/stash
---- browsermt-marian-dev.bak/.git/refs/stash	2023-06-01 20:13:41.347269258 -0400
-+++ browsermt-marian-dev/.git/refs/stash	1969-12-31 19:00:00.000000000 -0500
-@@ -1 +0,0 @@
--75b5daf8e204dbd578eef10a5dc3a2763568df70
 diff -Naur browsermt-marian-dev.bak/src/3rd_party/fbgemm/src/RefImplementations.cc browsermt-marian-dev/src/3rd_party/fbgemm/src/RefImplementations.cc
 --- browsermt-marian-dev.bak/src/3rd_party/fbgemm/src/RefImplementations.cc	2023-06-01 20:14:27.376440856 -0400
 +++ browsermt-marian-dev/src/3rd_party/fbgemm/src/RefImplementations.cc	2023-06-01 20:01:21.124240843 -0400

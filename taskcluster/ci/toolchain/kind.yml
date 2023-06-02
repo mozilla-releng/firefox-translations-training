@@ -63,6 +63,7 @@ tasks:
             script: build-marian.sh
             resources:
                 - taskcluster/scripts/toolchain/build-marian.sh
+                - taskcluster/scripts/toolchain/browsermt.patch
                 - pipeline/setup/compile-marian.sh
             toolchain-artifact: public/build/browsermt-marian.tar.zst
         fetches:

@@ -1,0 +1,23 @@
+diff -Naur browsermt-marian-dev.bak/CMakeLists.txt browsermt-marian-dev/CMakeLists.txt
+--- browsermt-marian-dev.bak/CMakeLists.txt	2023-06-01 20:13:41.351269359 -0400
++++ browsermt-marian-dev/CMakeLists.txt	2023-06-01 20:00:14.372499284 -0400
+@@ -390,7 +390,7 @@
+     option(COMPILE_CUDA_SM75 "Compile GPU version with SM75 support" ON)
+   endif()
+   if(CUDA_VERSION VERSION_EQUAL "11.0" OR CUDA_VERSION VERSION_GREATER "11.0")
+-    option(COMPILE_CUDA_SM35 "Compile GPU version with SM35 support" ON)
++    option(COMPILE_CUDA_SM35 "Compile GPU version with SM35 support" OFF)
+     option(COMPILE_CUDA_SM50 "Compile GPU version with SM50 support" ON)
+     option(COMPILE_CUDA_SM60 "Compile GPU version with SM60 support" ON)
+     option(COMPILE_CUDA_SM70 "Compile GPU version with SM70 support" ON)
+diff -Naur browsermt-marian-dev.bak/src/3rd_party/fbgemm/src/RefImplementations.cc browsermt-marian-dev/src/3rd_party/fbgemm/src/RefImplementations.cc
+--- browsermt-marian-dev.bak/src/3rd_party/fbgemm/src/RefImplementations.cc	2023-06-01 20:14:27.376440856 -0400
++++ browsermt-marian-dev/src/3rd_party/fbgemm/src/RefImplementations.cc	2023-06-01 20:01:21.124240843 -0400
+@@ -12,6 +12,7 @@
+ #include <cassert>
+ #include <cmath>
+ #include <cstring>
++#include <limits>
+ 
+ using namespace std;
+ 

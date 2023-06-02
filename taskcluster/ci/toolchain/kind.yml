@@ -62,7 +62,7 @@ tasks:
         run:
             script: build-marian.sh
             arguments:
-                - taskcluster/scripts/toolchain/browsermt.patch
+                - browsermt.patch
             resources:
                 - taskcluster/scripts/toolchain/build-marian.sh
                 - taskcluster/scripts/toolchain/browsermt.patch

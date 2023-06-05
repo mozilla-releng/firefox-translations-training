@@ -1,4 +1,3 @@
-compatible with [bergamot-translator](https://github.com/mozilla/bergamot-translator) and can be used by
 [firefox-translations](https://github.com/mozilla/firefox-translations) web extension. This work is a part of [Bergamot](https://browser.mt/) project  that focuses on improving client-side machine translation in a web browser.
 
 The pipeline is capable of training a translation model for a language pair end to end. 

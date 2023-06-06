@@ -89,8 +89,14 @@ def shorten_dataset_name(dataset):
         .replace("new-crawl", "nc")
         .replace("news.2020", "n2020")
         .replace("Neulab-tedtalks_train-1", "Ntt1")
+        .replace("devtest", "dt")
     )
 
+def shorten_provider_name(provider):
+    return (provider
+        .replace("sacrebleu", "sb")
+        .replace("flores", "fl")
+    )
 
 def get_dataset_categories(provider, dataset, dataset_categories):
     categories = set()
@@ -139,6 +145,7 @@ def jobs_from_datasets(config, jobs):
                     subjob = copy.deepcopy(job)
                     subs = {
                         "provider": provider,
+                        "provider_short": shorten_provider_name(provider),
                         "dataset": dataset,
                         "dataset_short": shorten_dataset_name(dataset),
                         "dataset_sanitized": dataset.replace("/", "_").replace(".", "_"),
@@ -215,6 +222,7 @@ def jobs_for_mono_datasets(config, jobs):
                     subjob = copy.deepcopy(job)
                     subs = {
                         "provider": provider,
+                        "provider_short": shorten_provider_name(provider),
                         "dataset": dataset,
                         "dataset_short": shorten_dataset_name(dataset),
                         "dataset_sanitized": dataset.replace("/", "_").replace(".", "_"),

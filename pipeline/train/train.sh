@@ -39,8 +39,12 @@ echo "### Training ${model_dir}"
 if [ "${ARTIFACT_EXT}" = "zst" ]; then
   zstdmt --rm -d "${train_set_prefix}.${src}.${ARTIFACT_EXT}"
   zstdmt --rm -d "${train_set_prefix}.${trg}.${ARTIFACT_EXT}"
-  zstdmt --rm -d "${valid_set_prefix}.${src}.${ARTIFACT_EXT}"
-  zstdmt --rm -d "${valid_set_prefix}.${trg}.${ARTIFACT_EXT}"
+  if [ -f "${valid_set_prefix}.${src}.${ARTIFACT_EXT}" ]; then
+    zstdmt --rm -d "${valid_set_prefix}.${src}.${ARTIFACT_EXT}"
+  fi
+  if [ -f "${valid_set_prefix}.${trg}.${ARTIFACT_EXT}" ]; then
+    zstdmt --rm -d "${valid_set_prefix}.${trg}.${ARTIFACT_EXT}"
+  fi
   ARTIFACT_EXT=""
 else
   ARTIFACT_EXT=".gz"

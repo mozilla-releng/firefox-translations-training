@@ -1,4 +1,3 @@
-
 The pipeline is capable of training a translation model for a language pair end to end. 
 Translation quality depends on chosen datasets, data cleaning procedures and hyperparameters. 
 Some settings, especially low resource languages might require extra tuning.

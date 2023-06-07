@@ -1,4 +1,3 @@
-Some settings, especially low resource languages might require extra tuning.
 
 It uses fast translation engine [Marian](https://marian-nmt.github.io) 
 and [Snakemake](https://snakemake.github.io/) framework for workflow management and parallelization.

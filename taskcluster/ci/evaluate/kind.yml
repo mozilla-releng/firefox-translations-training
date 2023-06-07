@@ -18,6 +18,7 @@ kind-dependencies:
     - dataset
     - train
     - train-vocab
+    - finetune
     - fetch
     - toolchain
 
@@ -178,6 +179,57 @@ tasks:
                 - artifact: "{dataset_sanitized}.{trg_locale}.zst"
                   extract: false
             train-teacher:
+                - artifact: final.model.npz.best-{best_model}.npz
+                  extract: false
+                - artifact: final.model.npz.best-{best_model}.npz.decoder.yml
+                  extract: false
+            train-vocab:
+                - artifact: vocab.spm
+                  extract: false
+
+    finetuned-teacher-{provider}-{dataset}-{src_locale}-{trg_locale}:
+        description: teacher evaluation for {dataset} {src_locale}-{trg_locale}
+        attributes:
+            stage: evaluate-finetuned-teacher
+            dataset-category: test
+            cache:
+                type: evaluate-finetuned-teacher
+        task-substitution:
+            substitution-fields:
+                - fetches.finetune-teacher
+        ensemble-config:
+            number:
+                from-parameters: training_config.experiment.teacher-ensemble
+            fields:
+                - name
+                - description
+                - treeherder.symbol
+                - dependencies.finetune-teacher
+        treeherder:
+            symbol: "ft-tch-{provider_short}-{dataset_short}-{src_locale}-{trg_locale}"
+        run:
+            command-context:
+                pipeline_script: $VCS_PATH/pipeline/eval/eval-gpu.sh
+                pipeline_args1: >-
+                    $TASK_WORKDIR/artifacts/{dataset_sanitized}
+                    $MOZ_FETCHES_DIR/{dataset_sanitized}
+                    {src_locale}
+                    {trg_locale}
+                pipeline_args2: >-
+                    $MOZ_FETCHES_DIR/final.model.npz.best-{best_model}.npz.decoder.yml
+                    $MOZ_FETCHES_DIR/final.model.npz.best-{best_model}.npz
+
+        dependencies:
+            dataset: dataset-{provider}-{dataset_sanitized}-{src_locale}-{trg_locale}
+            finetune-teacher: finetune-teacher-{src_locale}-{trg_locale}
+            train-vocab: train-vocab-{src_locale}-{trg_locale}
+        fetches:
+            dataset:
+                - artifact: "{dataset_sanitized}.{src_locale}.zst"
+                  extract: false
+                - artifact: "{dataset_sanitized}.{trg_locale}.zst"
+                  extract: false
+            finetune-teacher:
                 - artifact: final.model.npz.best-{best_model}.npz
                   extract: false
                 - artifact: final.model.npz.best-{best_model}.npz.decoder.yml

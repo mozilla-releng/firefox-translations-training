@@ -1,4 +1,3 @@
-Translation quality depends on chosen datasets, data cleaning procedures and hyperparameters. 
 Some settings, especially low resource languages might require extra tuning.
 
 It uses fast translation engine [Marian](https://marian-nmt.github.io) 

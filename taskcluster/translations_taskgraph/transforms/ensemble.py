@@ -2,7 +2,7 @@ import copy
 
 from taskgraph.transforms.base import TransformSequence
 from taskgraph.util.schema import Schema
-from voluptuous import ALLOW_EXTRA, Optional, Required
+from voluptuous import ALLOW_EXTRA, Optional, Required, Any
 
 from translations_taskgraph.util.dict_helpers import deep_get
 
@@ -12,6 +12,7 @@ SCHEMA = Schema(
             Required("number"): {
                 "from-parameters": str,
             },
+            Required("direction"): Any("out", "in"),
             Optional("fields"): [str],
         }
     },
@@ -23,21 +24,38 @@ transforms.add_validate(SCHEMA)
 
 
 @transforms.add
-def ensemble(config, jobs):
+def transforms(config, jobs):
     for job in jobs:
         ensemble_config = job.pop("ensemble-config", None)
         if ensemble_config:
             number = deep_get(config.params, ensemble_config["number"]["from-parameters"])
-            for i in range(number):
-                ensemble_job = copy.deepcopy(job)
+            if ensemble_config["direction"] == "out":
+                for i in range(number):
+                    ensemble_job = copy.deepcopy(job)
+                    for field in ensemble_config.get("fields"):
+                        container, subfield = ensemble_job, field
+                        while "." in subfield:
+                            f, subfield = subfield.split(".", 1)
+                            container = container[f]
+
+                        container[subfield] += f"-{i}"
+
+                    yield ensemble_job
+            else:
                 for field in ensemble_config.get("fields"):
-                    container, subfield = ensemble_job, field
+                    container, subfield = job, field
                     while "." in subfield:
                         f, subfield = subfield.split(".", 1)
                         container = container[f]
 
-                    container[subfield] += f"-{i}"
+                    for i in range(number):
+                        if isinstance(container[subfield], str):
+                            container[f"{subfield}-{i}"] = container[subfield] + f"-{i}"
+                        else:
+                            container[f"{subfield}-{i}"] = container[subfield]
 
-                yield ensemble_job
+                    container.pop(subfield)
+
+                yield job
         else:
             yield job

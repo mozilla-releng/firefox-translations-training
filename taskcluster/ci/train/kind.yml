@@ -132,6 +132,7 @@ tasks:
         ensemble-config:
             number:
                 from-parameters: training_config.experiment.teacher-ensemble
+            direction: out
             fields:
                 - name
                 - description

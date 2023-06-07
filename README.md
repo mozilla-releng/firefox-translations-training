@@ -1,4 +1,3 @@
-It uses fast translation engine [Marian](https://marian-nmt.github.io) 
 and [Snakemake](https://snakemake.github.io/) framework for workflow management and parallelization.
 
 High level overview [post on Mozilla Hacks](https://hacks.mozilla.org/2022/06/training-efficient-neural-network-models-for-firefox-translations/).

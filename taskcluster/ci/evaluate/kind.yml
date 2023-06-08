@@ -34,8 +34,6 @@ task-defaults:
         substitution-fields:
             - description
             - name
-            - dependencies
-            - fetches
             - treeherder.symbol
             - worker.env
             - run.command-context.pipeline_args1
@@ -100,6 +98,10 @@ tasks:
             dataset-category: test
             cache:
                 type: evaluate-backwards
+        dataset-config:
+            substitution-fields:
+                - dependencies
+                - fetches
         task-substitution:
             substitution-fields:
                 - fetches.train-backwards
@@ -143,13 +145,17 @@ tasks:
             dataset-category: test
             cache:
                 type: evaluate-teacher
+        dataset-config:
+            substitution-fields:
+                - dependencies
+                - fetches
         task-substitution:
             substitution-fields:
                 - fetches.train-teacher
         ensemble-config:
             number:
                 from-parameters: training_config.experiment.teacher-ensemble
-            direction: out
+            fan-out: true
             fields:
                 - name
                 - description

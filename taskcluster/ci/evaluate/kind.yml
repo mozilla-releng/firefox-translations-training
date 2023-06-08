@@ -201,13 +201,17 @@ tasks:
             dataset-category: test
             cache:
                 type: evaluate-finetuned-teacher
+        dataset-config:
+            substitution-fields:
+                - dependencies
+                - fetches
         task-substitution:
             substitution-fields:
                 - fetches.finetune-teacher
         ensemble-config:
             number:
                 from-parameters: training_config.experiment.teacher-ensemble
-            direction: out
+            fan-out: true
             fields:
                 - name
                 - description

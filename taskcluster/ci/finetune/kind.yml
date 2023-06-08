@@ -102,12 +102,10 @@ task-defaults:
 tasks:
     "teacher-{src_locale}-{trg_locale}":
         description: finetune teacher for {src_locale}-{trg_locale}
-        # ensemble means make N of these tasks
-        # TODO: this should come from the pipeline config
         ensemble-config:
             number:
                 from-parameters: training_config.experiment.teacher-ensemble
-            direction: out
+            fan-out: true
             fields:
                 - name
                 - description

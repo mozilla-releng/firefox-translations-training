@@ -2,9 +2,10 @@ import copy
 
 from taskgraph.transforms.base import TransformSequence
 from taskgraph.util.schema import Schema
-from voluptuous import ALLOW_EXTRA, Optional, Required, Any
+from voluptuous import ALLOW_EXTRA, Optional, Required
 
 from translations_taskgraph.util.dict_helpers import deep_get
+from translations_taskgraph.util.substitution import substitute
 
 SCHEMA = Schema(
     {
@@ -12,7 +13,7 @@ SCHEMA = Schema(
             Required("number"): {
                 "from-parameters": str,
             },
-            Required("direction"): Any("out", "in"),
+            Required("fan-out"): bool,
             Optional("fields"): [str],
         }
     },
@@ -29,7 +30,7 @@ def transforms(config, jobs):
         ensemble_config = job.pop("ensemble-config", None)
         if ensemble_config:
             number = deep_get(config.params, ensemble_config["number"]["from-parameters"])
-            if ensemble_config["direction"] == "out":
+            if ensemble_config["fan-out"] == True:
                 for i in range(number):
                     ensemble_job = copy.deepcopy(job)
                     for field in ensemble_config.get("fields"):
@@ -49,10 +50,10 @@ def transforms(config, jobs):
                         container = container[f]
 
                     for i in range(number):
-                        if isinstance(container[subfield], str):
-                            container[f"{subfield}-{i}"] = container[subfield] + f"-{i}"
-                        else:
-                            container[f"{subfield}-{i}"] = container[subfield]
+                        key = subfield.format(ensemble=i)
+                        container[key] = substitute(container[subfield], ensemble=i)
+                        if isinstance(container[key], str):
+                            container[key] += f"-{i}"
 
                     container.pop(subfield)
 

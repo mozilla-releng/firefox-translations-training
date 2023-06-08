@@ -257,15 +257,20 @@ tasks:
             dataset-category: test
             cache:
                 type: evaluate-teacher-ensemble
-        task-substitution:
+        dataset-config:
             substitution-fields:
-                - fetches.finetune-teacher
+                - dependencies.dataset
+                - dependencies.train-vocab
+                - dependencies.finetune-teacher-{ensemble}
+                - fetches.dataset
+                - fetches.train-vocab
         ensemble-config:
-            number: 2
-            direction: in
+            number:
+                from-parameters: training_config.experiment.teacher-ensemble
+            fan-out: false
             fields:
-                - dependencies.finetune-teacher
-                - fetches.finetune-teacher
+                - dependencies.finetune-teacher-{ensemble}
+                - fetches.finetune-teacher-{ensemble}
         treeherder:
             symbol: "ens-tch-{provider_short}-{dataset_short}-{src_locale}-{trg_locale}"
         run:
@@ -277,15 +282,15 @@ tasks:
                     {src_locale}
                     {trg_locale}
                 pipeline_args2: >-
-                    $MOZ_FETCHES_DIR/final.model.npz.best-{best_model}.npz.decoder.yml
+                    $MOZ_FETCHES_DIR/final.model.npz.best-{best_model}.npz.decoder-0.yml
                     # TODO: there will be two npz's (one from each part of the ensemble
                     # maybe we can catch these with a glob?
                     $MOZ_FETCHES_DIR/final.model.npz.best-{best_model}.npz
 
         dependencies:
+            finetune-teacher-{ensemble}: finetune-teacher-{src_locale}-{trg_locale}
             dataset: dataset-{provider}-{dataset_sanitized}-{src_locale}-{trg_locale}
             # TODO: there will be one finetune-teacher dependency per ensemble
-            finetune-teacher: finetune-teacher-{src_locale}-{trg_locale}
             train-vocab: train-vocab-{src_locale}-{trg_locale}
         fetches:
             dataset:
@@ -297,10 +302,12 @@ tasks:
             # we need to make sure the files are downloaded with unique names
             # should we adjust upstream tasks to generate unique names?
             # it's tough to get `dest` set here properly...
-            finetune-teacher:
-                - artifact: final.model.npz.best-{best_model}.npz
+            finetune-teacher-{ensemble}:
+                - artifact: final.model.npz.best-model.npz
+                  dest: final.model.npz.best-model-{ensemble}.npz
                   extract: false
-                - artifact: final.model.npz.best-{best_model}.npz.decoder.yml
+                - artifact: final.model.npz.best-model.npz.decoder.yml
+                  dest: final.model.npz.best-model.npz.decoder-{ensemble}.yml
                   extract: false
             train-vocab:
                 - artifact: vocab.spm

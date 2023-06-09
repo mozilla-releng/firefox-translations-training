@@ -51,9 +51,11 @@ def transforms(config, jobs):
 
                     for i in range(number):
                         key = subfield.format(ensemble=i)
-                        container[key] = substitute(container[subfield], ensemble=i)
+                        subcontainer = copy.deepcopy(container[subfield])
+                        container[key] = substitute(subcontainer, ensemble=i)
                         if isinstance(container[key], str):
                             container[key] += f"-{i}"
+
 
                     container.pop(subfield)
 

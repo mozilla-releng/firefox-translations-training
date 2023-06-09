@@ -308,7 +308,6 @@ tasks:
                   dest: ensemble-{{ensemble}}
                   extract: false
                 - artifact: final.model.npz.best-{best_model}.npz.decoder.yml
-                  dest: ensemble-{{ensemble}}
                   extract: false
             train-vocab:
                 - artifact: vocab.spm

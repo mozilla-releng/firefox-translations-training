@@ -80,8 +80,8 @@ task-defaults:
                 pip install -r $VCS_PATH/pipeline/eval/requirements/eval.txt &&
                 export PATH=$PATH:~/.local/bin &&
                 export MARIAN=$MOZ_FETCHES_DIR &&
-                sed -i -e "s,- .*fetches,- $MOZ_FETCHES_DIR," $TASK_WORKDIR/fetches/*.yml &&
-                sed -i -e "s,- .*artifacts,- $MOZ_FETCHES_DIR," $TASK_WORKDIR/fetches/*.yml &&
+                sed -i -e "s,- .*fetches/,- $MOZ_FETCHES_DIR," $TASK_WORKDIR/fetches/*.yml &&
+                sed -i -e "s,- .*artifacts/,- $MOZ_FETCHES_DIR," $TASK_WORKDIR/fetches/*.yml &&
                 {pipeline_script}
                 {pipeline_args1}
                 {pipeline_args2}

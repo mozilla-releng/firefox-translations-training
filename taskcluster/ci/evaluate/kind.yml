@@ -285,7 +285,7 @@ tasks:
                     {src_locale}
                     {trg_locale}
                 pipeline_args2: >-
-                    $MOZ_FETCHES_DIR/ensemble-0/final.model.npz.best-{best_model}.npz.decoder.yml
+                    $MOZ_FETCHES_DIR/final.model.npz.best-{best_model}.npz.decoder.yml
                     $MOZ_FETCHES_DIR/ensemble*/*.npz
 
         dependencies:

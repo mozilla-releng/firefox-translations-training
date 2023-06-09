@@ -285,8 +285,8 @@ tasks:
                     {src_locale}
                     {trg_locale}
                 pipeline_args2: >-
-                    $MOZ_FETCHES_DIR/final.model.npz.best-{best_model}.npz.decoder-0.yml
-                    $MOZ_FETCHES_DIR/*.npz
+                    $MOZ_FETCHES_DIR/ensemble-0/final.model.npz.best-{best_model}.npz.decoder.yml
+                    $MOZ_FETCHES_DIR/ensemble*/*.npz
 
         dependencies:
             finetune-teacher-{ensemble}: finetune-teacher-{src_locale}-{trg_locale}
@@ -305,10 +305,10 @@ tasks:
             # it's tough to get `dest` set here properly...
             finetune-teacher-{ensemble}:
                 - artifact: final.model.npz.best-{best_model}.npz
-                  dest: final.model.npz.best-{best_model}-{{ensemble}}.npz
+                  dest: ensemble-{{ensemble}}
                   extract: false
                 - artifact: final.model.npz.best-{best_model}.npz.decoder.yml
-                  dest: final.model.npz.best-{best_model}.npz.decoder-{{ensemble}}.yml
+                  dest: ensemble-{{ensemble}}
                   extract: false
             train-vocab:
                 - artifact: vocab.spm

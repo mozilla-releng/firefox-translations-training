@@ -38,3 +38,4 @@ ${COMPRESSION_CMD} -dc "${dataset_prefix}.${src}.${ARTIFACT_EXT}" |
   tee "${res_prefix}.metrics"
 
 echo "###### Done: Evaluation of a model"
+

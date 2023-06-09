@@ -264,6 +264,9 @@ tasks:
                 - dependencies.finetune-teacher-{ensemble}
                 - fetches.dataset
                 - fetches.train-vocab
+        task-substitution:
+            substitution-fields:
+                - fetches.finetune-teacher-{ensemble}
         ensemble-config:
             number:
                 from-parameters: training_config.experiment.teacher-ensemble
@@ -283,9 +286,7 @@ tasks:
                     {trg_locale}
                 pipeline_args2: >-
                     $MOZ_FETCHES_DIR/final.model.npz.best-{best_model}.npz.decoder-0.yml
-                    # TODO: there will be two npz's (one from each part of the ensemble
-                    # maybe we can catch these with a glob?
-                    $MOZ_FETCHES_DIR/final.model.npz.best-{best_model}.npz
+                    $MOZ_FETCHES_DIR/*.npz
 
         dependencies:
             finetune-teacher-{ensemble}: finetune-teacher-{src_locale}-{trg_locale}
@@ -303,11 +304,11 @@ tasks:
             # should we adjust upstream tasks to generate unique names?
             # it's tough to get `dest` set here properly...
             finetune-teacher-{ensemble}:
-                - artifact: final.model.npz.best-model.npz
-                  dest: final.model.npz.best-model-{ensemble}.npz
+                - artifact: final.model.npz.best-{best_model}.npz
+                  dest: final.model.npz.best-{best_model}-{{ensemble}}.npz
                   extract: false
-                - artifact: final.model.npz.best-model.npz.decoder.yml
-                  dest: final.model.npz.best-model.npz.decoder-{ensemble}.yml
+                - artifact: final.model.npz.best-{best_model}.npz.decoder.yml
+                  dest: final.model.npz.best-{best_model}.npz.decoder-{{ensemble}}.yml
                   extract: false
             train-vocab:
                 - artifact: vocab.spm

@@ -27,3 +27,4 @@ tar --zstd -cf $UPLOAD_DIR/marian.tar.zst \
   "spm_train" \
   "spm_encode" \
   "spm_export_vocab"
+

@@ -130,7 +130,7 @@ def jobs_from_datasets(config, jobs):
                     subs = {
                         "provider": provider,
                         "provider_short": shorten_provider_name(provider),
-                        "dataset": dataset,
+                        "dataset": f"{provider}_{dataset}",
                         "dataset_short": shorten_dataset_name(dataset),
                         "dataset_sanitized": sanitize_dataset_name(dataset),
                         "src_locale": pair["src"],
@@ -207,7 +207,7 @@ def jobs_for_mono_datasets(config, jobs):
                     subs = {
                         "provider": provider,
                         "provider_short": shorten_provider_name(provider),
-                        "dataset": dataset,
+                        "dataset": f"{provider}_{dataset}",
                         "dataset_short": shorten_dataset_name(dataset),
                         "dataset_sanitized": sanitize_dataset_name(dataset),
                         "locale": locale,

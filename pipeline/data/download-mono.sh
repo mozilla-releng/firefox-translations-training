@@ -43,3 +43,4 @@ set -o pipefail
 rm -rf "${original_prefix}.${ARTIFACT_EXT}"
 
 echo "###### Done: Downloading monolingual data"
+

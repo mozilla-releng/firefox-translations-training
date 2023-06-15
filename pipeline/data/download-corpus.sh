@@ -25,3 +25,4 @@ type=${dataset%%_*}
 bash "importers/corpus/${type}.sh" "${SRC}" "${TRG}" "${output_prefix}" "${name}"
 
 echo "###### Done: Downloading dataset ${dataset}"
+

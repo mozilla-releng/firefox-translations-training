@@ -54,7 +54,7 @@ tasks:
                 fetches:
                     finetune-teacher-{this_chunk}:
                         - artifact: final.model.npz.best-{best_model}.npz
-                          dest: final.model.npz.best-{best_model}-{this_chunk}.npz
+                          dest: model{this_chunk}
 
         dataset-config:
             include-categories:
@@ -106,7 +106,7 @@ tasks:
                     artifacts
                     nbest
                     $MOZ_FETCHES_DIR/vocab.spm
-                    $MOZ_FETCHES_DIR/*.npz
+                    $MOZ_FETCHES_DIR/model*/*.npz
 
         dependencies:
             split-corpus: split-corpus-{src_locale}-{trg_locale}

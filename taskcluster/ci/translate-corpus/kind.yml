@@ -1,0 +1,112 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+---
+loader: taskgraph.loader.transform:loader
+
+transforms:
+    - translations_taskgraph.transforms.task_substitution_from_params:transforms
+    - translations_taskgraph.transforms.from_datasets:locales_only
+    - translations_taskgraph.transforms.chunking:chunk
+    - taskgraph.transforms.job:transforms
+    - translations_taskgraph.transforms.cache:transforms
+    - taskgraph.transforms.cached_tasks:transforms
+    - taskgraph.transforms.task:transforms
+
+kind-dependencies:
+    - split-mcorpus
+    - finetune-teacher
+    - train-vocab
+    - toolchain
+
+tasks:
+    "{src_locale}-{trg_locale}-{this_chunk}/{total_chunks}"
+        description: translate corpus for {locale}
+        attributes:
+            stage: translate-corpus
+            dataset-category: train
+            cache:
+                type: translate-corpus
+                resources:
+                    - pipeline/translate/translate-nbest.sh
+                    - taskcluster/scripts/pipeline/translate-taskcluster.sh
+                from-parameters:
+                    split_chunks: training_config.taskcluster.split-chunks
+
+        chunk-config:
+            total-chunks:
+                from-parameters: training_config.taskcluster.split-chunks
+            substitution-fields:
+                - label
+                - treeherder.symbol
+                - fetches.split-corpus
+                - run.command
+
+        dataset-config:
+            include-categories:
+                - train
+            substitution-fields:
+                - description
+                - label
+                - treeherder.symbol
+                - fetches.finetune-teacher
+                - dependencies
+                - worker.env
+        task-substitution:
+            from-parameters:
+                best_model: training_config.experiment.best-model
+            substitution-fields:
+                - fetches.finetune-teacher
+
+        # Don't run unless explicitly scheduled
+        run-on-tasks-for: []
+
+        treeherder:
+            symbol: "{src_locale}-{trg_locale}-{this_chunk}/{total_chunks}"
+            platform: translate-corpus/opt
+
+        worker-type: t-linux-v100-gpu-4
+    
+        worker:
+            max-run-time: 3600
+            artifacts:
+                - name: public/build
+                  path: artifacts
+                  type: directory
+            env:
+                GPUS: "0 1 2 3"
+                WORKSPACE: "8000"
+                CUDA_DIR: fetches/cuda-toolkit
+                CUDNN_DIR: fetches/cuda-toolkit
+
+        run:
+            using: run-task
+            command:
+                - bash
+                - -xc
+                - >-
+                    export MARIAN=$MOZ_FETCHES_DIR &&
+                    $VCS_PATH/taskcluster/scripts/pipeline/translate-taskcluster.sh
+                    $MOZ_FETCHES_DIR/split-file.{this_chunk}.zst
+                    artifacts
+                    $MOZ_FETCHES_DIR/vocab.spm
+                    $MOZ_FETCHES_DIR/*.npz
+
+        dependencies:
+            split-corpus: split-corpus-{src_locale}-{trg_locale}
+            finetune-teacher: train-backwards-{src_locale}-{trg_locale}
+            train-vocab: train-vocab-{src_locale}-{trg_locale}
+
+        fetches:
+            toolchain:
+                - marian
+                - cuda-toolkit
+            split-corpus:
+                - artifact: split-file.{this_chunk}.zst
+                  extract: true
+            finetune-teacher:
+                - artifact: final.model.npz.best-{best_model}.npz
+                  extract: false
+            train-vocab:
+                - artifact: vocab.spm
+                  extract: false

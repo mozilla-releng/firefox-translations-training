@@ -26,15 +26,23 @@ fi
 # evenly into the requested number of chunks, creating empty archives if there's
 # not enough files to go around.
 cd "${output_dir}"
-ls file* | sort > all-files.txt
+ls file* | grep -v "\.ref" | sort > src-files.txt
+ls file* | grep "\.ref" | sort > ref-files.txt
 for i in $(seq 1 ${chunks} | tr '\n' ' '); do
-  files=$(split -n l/${i}/${chunks} all-files.txt | tr '\n' ' ')
-  if [ "${files}" = "" ]; then
-    touch "split-file.${i}"
+  src_files=$(split -n l/${i}/${chunks} src-files.txt | tr '\n' ' ')
+  ref_files=$(split -n l/${i}/${chunks} ref-files.txt | tr '\n' ' ')
+  if [ "${src_files}" = "" ]; then
+    touch "src-file.${i}"
   else
-    cat ${files} > "split-file.${i}"
+    cat ${src_files} > "src-file.${i}"
   fi
-  zstd --rm "split-file.${i}"
+  zstd --rm "src-file.${i}"
+  if [ "${ref_files}" = "" ]; then
+    touch "ref-file.${i}"
+  else
+    cat ${ref_files} > "ref-file.${i}"
+  fi
+  zstd --rm "ref-file.${i}"
 done
 
-rm file* all-files.txt
+rm file* src-files.txt ref-files.txt

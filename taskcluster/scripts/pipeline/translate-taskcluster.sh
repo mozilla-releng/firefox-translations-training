@@ -16,6 +16,12 @@ mkdir -p "${output_dir}"
 
 zstd -d --rm "${input}"
 input="${input%.zst}"
+
+outfile="${input}.out"
+if [ "${type}" = "nbest" ]; then
+  outfile="${input}.nbest.out"
+fi
+
 # In Taskcluster, we always parallelize this step N ways. In rare cases, there
 # may not be enough input files to feed all of these jobs. If we received an
 # empty input file we have nothing to do other than copying the empty file
@@ -27,8 +33,8 @@ if [ -s "${input}" ]; then
     ${VCS_ROOT}/pipeline/translate/translate-nbest.sh "${input}" "${other_args[@]}"
   fi
 else
-  cp "${input}" "${input}".out
+  cp "${input}" "${outfile}"
 fi
 
-zstd --rm "${input}.out"
-cp "${input}.out.zst" "${output_dir}"
+zstd --rm "${outfile}"
+cp "${outfile}.zst" "${output_dir}"

@@ -19,7 +19,7 @@ input="${input%.zst}"
 
 outfile="${input}.out"
 if [ "${type}" = "nbest" ]; then
-  outfile="${input}.nbest.out"
+  outfile="${input}.nbest"
 fi
 
 # In Taskcluster, we always parallelize this step N ways. In rare cases, there

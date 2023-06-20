@@ -8,6 +8,7 @@ transforms:
     - translations_taskgraph.transforms.task_substitution_from_params:transforms
     - translations_taskgraph.transforms.from_datasets:mono
     - translations_taskgraph.transforms.chunking:chunk
+    - translations_taskgraph.transforms.chunking:unchunk
     - taskgraph.transforms.job:transforms
     - translations_taskgraph.transforms.cache:transforms
     - taskgraph.transforms.cached_tasks:transforms
@@ -15,7 +16,7 @@ transforms:
 
 kind-dependencies:
     - split-mono
-    - train-backwards
+    - finetune-teacher
     - train-vocab
     - toolchain
 
@@ -34,15 +35,16 @@ task-defaults:
             - description
             - label
             - treeherder.symbol
-            - fetches.train-backwards
+            - fetches
             - dependencies
             - worker.env
+            - unchunk-config.per-upstream-fields
 
     task-substitution:
         from-parameters:
             best_model: training_config.experiment.best-model
         substitution-fields:
-            - fetches.train-backwards
+            - unchunk-config.per-upstream-fields.fetches
 
     worker-type: t-linux-v100-gpu-4
 
@@ -73,21 +75,27 @@ task-defaults:
                 artifacts
                 plain
                 $MOZ_FETCHES_DIR/vocab.spm
-                $MOZ_FETCHES_DIR/*.npz
+                $MOZ_FETCHES_DIR/model*/*.npz
+
+    dependencies:
+        train-vocab: train-vocab-{src_locale}-{trg_locale}
 
     fetches:
         toolchain:
             - marian
             - cuda-toolkit
+        train-vocab:
+            - artifact: vocab.spm
+              extract: false
 
 tasks:
-    trg:
-        label: translate-mono-trg-{src_locale}-{trg_locale}-{this_chunk}/{total_chunks}
+    src:
+        label: translate-mono-src-{src_locale}-{trg_locale}-{this_chunk}/{total_chunks}
         attributes:
-            stage: translate-mono-trg
-            dataset-category: mono-trg
+            stage: translate-mono-src
+            dataset-category: mono-src
             cache:
-                type: translate-mono-trg
+                type: translate-mono-src
 
         chunk-config:
             total-chunks:
@@ -95,29 +103,32 @@ tasks:
             substitution-fields:
                 - label
                 - treeherder.symbol
-                - fetches.split-mono-trg
+                - fetches.split-mono-src
                 - run.command
+
+        unchunk-config:
+            total-chunks:
+                from-parameters: training_config.experiment.teacher-ensemble
+            per-upstream-fields:
+                dependencies:
+                    finetune-teacher-{this_chunk}: finetune-teacher-{src_locale}-{trg_locale}-{this_chunk}/{total_chunks}
+                fetches:
+                    finetune-teacher-{this_chunk}:
+                        - artifact: final.model.npz.best-{best_model}.npz
+                          dest: model{this_chunk}
 
         dataset-config:
             include-categories:
-                - mono-trg
+                - mono-src
 
         treeherder:
-            symbol: "trg-{src_locale}-{trg_locale}-{this_chunk}/{total_chunks}"
+            symbol: "src-{src_locale}-{trg_locale}-{this_chunk}/{total_chunks}"
             platform: translate-mono/opt
 
         dependencies:
-            split-mono-trg: split-mono-trg-{src_locale}-{trg_locale}
-            train-backwards: train-backwards-{src_locale}-{trg_locale}
-            train-vocab: train-vocab-{src_locale}-{trg_locale}
+            split-mono-src: split-mono-src-{src_locale}-{trg_locale}
 
         fetches:
-            split-mono-trg:
+            split-mono-src:
                 - artifact: out-file.{this_chunk}.zst
                   extract: true
-            train-backwards:
-                - artifact: final.model.npz.best-{best_model}.npz
-                  extract: false
-            train-vocab:
-                - artifact: vocab.spm
-                  extract: false

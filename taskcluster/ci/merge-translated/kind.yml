@@ -15,7 +15,7 @@ transforms:
 kind-dependencies:
     - merge-mono
     - merge
-    - collect-mono-trg
+    - collect-mono-src
     - collect-corpus
     - toolchain
 
@@ -88,7 +88,7 @@ tasks:
         dependencies:
             merge-corpus: merge-corpus-{src_locale}-{trg_locale}
             merge-mono-src: merge-mono-src-{src_locale}-{trg_locale}
-            collect-mono-trg: collect-mono-trg-{src_locale}-{trg_locale}
+            collect-mono-src: collect-mono-src-{src_locale}-{trg_locale}
             collect-corpus: collect-corpus-{src_locale}-{trg_locale}
 
         fetches:
@@ -96,7 +96,7 @@ tasks:
                 - artifact: corpus.{src_locale}.zst
             merge-mono-src:
                 - artifact: mono.{src_locale}.zst
-            collect-mono-trg:
+            collect-mono-src:
                 - artifact: mono.{trg_locale}.zst
             collect-corpus:
                 - artifact: corpus.{trg_locale}.zst

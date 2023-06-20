@@ -65,7 +65,6 @@ tasks:
                 - bash
                 - -c
                 - >-
-                    zstd -d --rm $MOZ_FETCHES_DIR/out-file* &&
                     $VCS_PATH/pipeline/translate/collect.sh
                     fetches
                     artifacts/corpus.{trg_locale}.zst

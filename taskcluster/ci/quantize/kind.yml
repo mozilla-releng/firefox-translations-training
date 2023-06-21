@@ -38,6 +38,7 @@ tasks:
                 - treeherder.symbol
                 - fetches
                 - dependencies
+                - worker.env
         task-substitution:
             from-parameters:
                 best_model: training_config.experiment.best-model
@@ -51,6 +52,9 @@ tasks:
                 - name: public/build
                   path: /builds/worker/artifacts
                   type: directory
+            env:
+                SRC: "{src_locale}"
+                TRG: "{trg_locale}"
 
         # Don't run unless explicitly scheduled
         run-on-tasks-for: []

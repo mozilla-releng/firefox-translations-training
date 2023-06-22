@@ -28,7 +28,7 @@ tar -cf $UPLOAD_DIR/marian.tar \
   "spm_encode" \
   "spm_export_vocab"
 
-if [ -f "${MARIAN_DIR}/scripts/alphas/extract_stats.py" ];
+if [ -f "${MARIAN_DIR}/scripts/alphas/extract_stats.py" ]; then
   cd "${MARIAN_DIR}/scripts/alphas"
   tar -rf $UPLOAD_DIR/marian.tar extract_stats.py
 fi

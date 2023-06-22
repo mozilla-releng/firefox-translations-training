@@ -74,7 +74,9 @@ task-defaults:
     run:
         using: run-task
         command-context:
-            pipeline_setup: ""
+            pipeline_setup: >-
+                sed -i -e "s,- .*fetches,- $MOZ_FETCHES_DIR," $TASK_WORKDIR/fetches/*.yml &&
+                sed -i -e "s,- .*artifacts,- $MOZ_FETCHES_DIR," $TASK_WORKDIR/fetches/*.yml
         command:
             - bash
             - -c
@@ -88,8 +90,6 @@ task-defaults:
                 pip install -r $VCS_PATH/pipeline/eval/requirements/eval.txt &&
                 export PATH=$PATH:~/.local/bin &&
                 export MARIAN=$MOZ_FETCHES_DIR &&
-                sed -i -e "s,- .*fetches,- $MOZ_FETCHES_DIR," $TASK_WORKDIR/fetches/*.yml &&
-                sed -i -e "s,- .*artifacts,- $MOZ_FETCHES_DIR," $TASK_WORKDIR/fetches/*.yml &&
                 {pipeline_setup}
                 {pipeline_script}
                 {pipeline_args1}
@@ -349,7 +349,7 @@ tasks:
             symbol: "quant-{provider_short}-{dataset_short}-{src_locale}-{trg_locale}"
         run:
             command-context:
-                pipeline_setup: zstd --rm -d $MOZ_FETCHES_DIR/lex.s2t.pruned.zst &&
+                pipeline_setup: zstd --rm -d $MOZ_FETCHES_DIR/lex.s2t.pruned.zst
                 pipeline_script: $VCS_PATH/pipeline/eval/eval-quantized.sh
                 pipeline_args1: >-
                     $MOZ_FETCHES_DIR/model.intgemm.alphas.bin

@@ -71,6 +71,16 @@ def chunk_jobs(config, jobs):
                 subfield = substitute(subfield, **subs)
                 container[subfield] = substitute(subcontainer, **subs)
 
+            if config.kind == "train-teacher":
+                if this_chunk == 1:
+                    subjob["worker-type"] = "b-linux-v100-gpu-4"
+                    subjob["worker"]["env"]["GPUS"] = "0 1 2 3"
+                if this_chunk == 2:
+                    subjob["worker-type"] = "b-linux-v100-gpu-8"
+                    subjob["worker"]["env"]["GPUS"] = "0 1 2 3 4 5 6 7"
+                if this_chunk == 3:
+                    subjob["worker-type"] = "b-linux-v100-gpu-16"
+                    subjob["worker"]["env"]["GPUS"] = "0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15"
             yield subjob
 
 

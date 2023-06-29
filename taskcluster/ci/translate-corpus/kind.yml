@@ -75,7 +75,7 @@ tasks:
         run-on-tasks-for: []
 
                 # TODO: uprgade to 4 gpu
-        worker-type: t-linux-v100-gpu
+        worker-type: b-linux-v100-gpu
     
         worker:
             max-run-time: 86400

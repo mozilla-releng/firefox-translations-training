@@ -18,7 +18,7 @@ def get_defaults(_):
                 "name": "training pipeline test config",
                 "src": "ru",
                 "trg": "en",
-                "teacher-ensemble": 2,
+                "teacher-ensemble": 3,
                 # Used for providing a pretrained backward model. We do not support this yet.
                 "backward-model": "NOT-YET-SUPPORTED",
                 # Used for providing a pretrained vocab. We do not support this yet.

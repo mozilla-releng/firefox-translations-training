@@ -26,12 +26,22 @@ workers:
             os: linux
             worker-type: '{alias}-gcp'
         # TODO: this should probably be b-linux...need to update ci-config
-        t-linux-v100-gpu:
+        b-linux-v100-gpu:
             provisioner: '{trust-domain}-{level}'
             implementation: generic-worker
             os: linux
             worker-type: '{alias}'
-        t-linux-v100-gpu-4:
+        b-linux-v100-gpu-4:
+            provisioner: '{trust-domain}-{level}'
+            implementation: generic-worker
+            os: linux
+            worker-type: '{alias}'
+        b-linux-v100-gpu-8:
+            provisioner: '{trust-domain}-{level}'
+            implementation: generic-worker
+            os: linux
+            worker-type: '{alias}'
+        b-linux-v100-gpu-16:
             provisioner: '{trust-domain}-{level}'
             implementation: generic-worker
             os: linux

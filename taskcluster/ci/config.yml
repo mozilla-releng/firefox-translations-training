@@ -1,7 +1,7 @@
 ---
 trust-domain: "translations"
 task-priority: low
-task-deadline-after: 1 month
+task-deadline-after: 5 days
 treeherder:
     group-names:
         "I": "Docker images"

@@ -51,6 +51,7 @@ fi
 ######################################################################
 echo "### Language identification"
 test -s "${output_prefix}.${lang}.langid.${ARTIFACT_EXT}" ||
+  wget -O tools/lid.176.bin https://dl.fbaipublicfiles.com/fasttext/supervised-models/lid.176.bin
   ${COMPRESSION_CMD} -dc "${output_prefix}.${lang}.monofix.${ARTIFACT_EXT}" |
   # memory intensive
   parallel --no-notice --pipe -k -j "$(echo "${threads}"/4 | bc)" --block 50M "python3 tools/langid_fasttext.py" |

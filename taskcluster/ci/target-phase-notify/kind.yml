@@ -1,0 +1,35 @@
+# This Source Code Form is subject to the terms of the Mozilla Public
+# License, v. 2.0. If a copy of the MPL was not distributed with this
+# file, You can obtain one at http://mozilla.org/MPL/2.0/.
+---
+loader: taskgraph.loader.transform:loader
+
+transforms:
+    - mozillavpn_taskgraph.transforms.notify:transforms
+    - taskgraph.transforms.notify:transforms
+    - taskgraph.transforms.task:transforms
+
+kind-dependencies:
+    - beetmover
+
+task-defaults:
+    description: "Sends notifications to #TODO in Slack"
+    worker-type: succeed
+    worker:
+        implementation: succeed
+    run-on-tasks-for: [action]
+    notify:
+        recipients:
+            by-level:
+                "3":
+                    - type: slack-channel
+                      channel-id: TODO  # #TODO
+                    - type: matrix-room
+                      room-id: "!TODO:mozilla.org"  # #TODO
+                default:
+                    - type: matrix-room
+                      room-id: "!TODO:mozilla.org"  # #TODO
+
+tasks:
+    promote-addons:
+        attributes: {}

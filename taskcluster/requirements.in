@@ -1,1 +1,1 @@
-taskcluster-taskgraph>=7
+git+https://github.com/taskcluster/taskgraph.git@refs/pull/426/head

@@ -288,7 +288,7 @@ tasks:
                                         then:
                                           symbol: D
                                         else:
-                                          $if: 'tasks_for == "action"'
+                                          $if: 'tasks_for in ["action", "pr-action"]'
                                           then:
                                               groupName: 'action-callback'
                                               groupSymbol: AC

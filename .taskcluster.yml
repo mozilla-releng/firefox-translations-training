@@ -186,7 +186,7 @@ tasks:
                           $switch:
                               'tasks_for == "cron"': low
                               'tasks_for == "github-push"|| isPullRequest': very-low
-                              $default: lowest  # tasks_for == 'action'
+                              $default: lowest  # tasks_for in ['action', 'pr-action']
                       retries: 5
 
                       payload:
@@ -215,7 +215,7 @@ tasks:
                                       - $if: 'isPullRequest'
                                         then:
                                             ${normProjectUpper}_PULL_REQUEST_NUMBER: '${event.pull_request.number}'
-                                      - $if: 'tasks_for == "action"'
+                                      - $if: 'tasks_for in ["action", "pr-action"]'
                                         then:
                                             ACTION_TASK_GROUP_ID: '${action.taskGroupId}'  # taskGroupId of the target task
                                             ACTION_TASK_ID: {$json: {$eval: 'taskId'}}  # taskId of the target task (JSON-encoded)
@@ -240,7 +240,7 @@ tasks:
                                   - $let:
                                         extraArgs: {$if: 'tasks_for == "cron"', then: '${cron.quoted_args}', else: ''}
                                     in:
-                                        $if: 'tasks_for == "action"'
+                                        $if: 'tasks_for in ["action", "pr-action"]'
                                         then: >
                                             cd /builds/worker/checkouts/src &&
                                             ln -s /builds/worker/artifacts artifacts &&
@@ -296,7 +296,7 @@ tasks:
                                           else:
                                               groupSymbol: cron
                                               symbol: "${cron.job_symbol}"
-                              - $if: 'tasks_for == "action"'
+                              - $if: 'tasks_for in ["action", "pr-action"]'
                                 then:
                                   parent: '${action.taskGroupId}'
                                   action:

@@ -141,7 +141,7 @@ tasks:
                       routes:
                           $flatten:
                               - checks
-                              - $if: '!isPullRequest'
+                              - $if: '!isPullRequest && tasks_for != "pr-action"'
                                 then:
                                   - tc-treeherder.v2.${project}.${head_sha}
                               - $switch:

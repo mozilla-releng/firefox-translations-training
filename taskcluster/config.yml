@@ -130,6 +130,12 @@ workers:
             implementation: docker-worker
             os: linux
             worker-type: '{alias}-gcp'
+        beetmover:
+            provisioner: '{trust-domain}-{level}'
+            implementation: beetmover-translations
+            os: scriptworker
+            # FIXME
+            worker-type: 'beetmover'
 
 # Keys are worker type, and align with the `worker-type` entries in the
 # `worker.aliases` above.

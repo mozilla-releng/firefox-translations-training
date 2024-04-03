@@ -62,10 +62,6 @@ tasks:
             copy-attributes: true
             strip-kind-from-name: false
     
-        scopes:
-            - project:releng:beetmover:bucket:translations
-            - project:releng:beetmover:action:upload-translations-artifacts
-    
         task-context:
             from-parameters:
                 src_locale: training_config.experiment.src

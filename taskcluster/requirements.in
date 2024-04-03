@@ -1,1 +1,1 @@
-taskcluster-taskgraph>=7.4.0
+taskcluster-taskgraph @ git+https://github.com/bhearsum/taskgraph@bf50f28e2036da8e1e852c36958e7b882b6369be
